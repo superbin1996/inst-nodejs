@@ -29,12 +29,18 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: false,
     maxLength: 300,
-  },
-});
+  }
+}, {timestamps:true});
 
 UserSchema.pre("save", async function () {
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
+});
+
+UserSchema.pre("updateOne", async function () {
+  let data = this.getUpdate();
+  const salt = await bcrypt.genSalt(10);
+  data.password = await bcrypt.hash(data.password, salt);
 });
 
 UserSchema.methods.createJWT = function () {
