@@ -1,6 +1,5 @@
 const { StatusCodes } = require("http-status-codes");
 const CustomAPIError = require("../errors/custom-api");
-const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 
 const auth = async (req, res, next) => {
@@ -12,6 +11,7 @@ const auth = async (req, res, next) => {
       StatusCodes.UNAUTHORIZED
     );
   }
+  
   const token = authHeader.split(" ")[1];
 
   try {

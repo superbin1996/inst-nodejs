@@ -5,13 +5,25 @@ const User = require("../models/User");
 const register = async (req, res) => {
   const user = await User.create(req.body);
   const token = user.createJWT();
-  res.status(StatusCodes.CREATED).json({ user: { username: user.username }, token });
+  res
+    .status(StatusCodes.CREATED)
+    .json({ user: { username: user.username }, token });
+};
+
+// For test only
+const getUsers = async (req, res) => {
+  const users = await User.find({})
+
+  res.status(StatusCodes.OK).json({ users });
 };
 
 const login = async (req, res) => {
   const { username, password } = req.body;
   if (!username || !password) {
-    throw new CustomAPIError("Please provide username and password", StatusCodes.BAD_REQUEST);
+    throw new CustomAPIError(
+      "Please provide username and password",
+      StatusCodes.BAD_REQUEST
+    );
   }
   const user = await User.findOne({ username });
   if (!user) {
@@ -24,8 +36,9 @@ const login = async (req, res) => {
   }
   const token = user.createJWT();
 
-
-  res.status(StatusCodes.ACCEPTED).json({ "user": { "username": user.username }, token});
+  res
+    .status(StatusCodes.ACCEPTED)
+    .json({ user: { username: user.username }, token });
 };
 
-module.exports = { register, login };
+module.exports = { register, login, getUsers };
