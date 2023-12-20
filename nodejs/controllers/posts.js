@@ -1,21 +1,22 @@
 const { StatusCodes } = require("http-status-codes");
 const Post = require("../models/Post");
 const CustomAPIError = require("../errors/custom-api");
+const Follow = require("../models/Follow");
 
 const getAllPosts = async (req, res) => {
-  let queryObject = {}
-  
-  const sort = req.query.sort || '-updatedAt'
+  let queryObject = {};
+
+  const sort = req.query.sort || "-updatedAt";
   const page = Number(req.query.page) || 1;
   const limit = Number(req.query.limit) || 10;
   const skip = (page - 1) * limit;
-  
-  let result = await Post.find(queryObject).sort(sort).skip(skip).limit(limit)
-  
+
+  let result = await Post.find(queryObject).sort(sort).skip(skip).limit(limit);
+
   const totalPosts = await Post.countDocuments(queryObject);
   const numOfPages = Math.ceil(totalPosts / limit);
 
-  res.status(StatusCodes.OK).json({ posts:result, totalPosts, numOfPages });
+  res.status(StatusCodes.OK).json({ posts: result, totalPosts, numOfPages });
 };
 
 const getPost = async (req, res) => {
@@ -37,6 +38,29 @@ const getPost = async (req, res) => {
   res.status(StatusCodes.OK).json({ post });
 };
 
+const getFollowingPosts = async (req, res) => {
+  const user = await Follow.findOne({ user: req.user.userId });
+
+  // following array
+  const followingIds = user.following;
+
+  let queryObject = {
+    user: { $in: ["6582593f93e5e8468d50fc0f", "65811408c7946f713b6efeaf"] },
+  };
+
+  const sort = req.query.sort || "-updatedAt";
+  const page = Number(req.query.page) || 1;
+  const limit = Number(req.query.limit) || 10;
+  const skip = (page - 1) * limit;
+
+  let result = await Post.find(queryObject).sort(sort).skip(skip).limit(limit);
+
+  const totalPosts = await Post.countDocuments(queryObject);
+  const numOfPages = Math.ceil(totalPosts / limit);
+
+  res.status(StatusCodes.OK).json({ posts:result, totalPosts, numOfPages });
+};
+
 const createPost = async (req, res) => {
   req.body.user = req.user.userId;
   const post = await Post.create(req.body);
@@ -45,7 +69,6 @@ const createPost = async (req, res) => {
 
 const updatePost = async (req, res) => {
   const {
-    body: { status },
     user: { userId },
     params: { id: postId },
   } = req;
@@ -83,4 +106,11 @@ const deletePost = async (req, res) => {
   res.status(StatusCodes.OK).send(`postId: ${postId} has been deleted`);
 };
 
-module.exports = { getAllPosts, getPost, createPost, updatePost, deletePost };
+module.exports = {
+  getAllPosts,
+  getPost,
+  createPost,
+  updatePost,
+  deletePost,
+  getFollowingPosts,
+};

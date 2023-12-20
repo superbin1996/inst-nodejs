@@ -1,4 +1,5 @@
-const path = require('path')
+const { StatusCodes } = require("http-status-codes");
+const path = require("path");
 
 const uploadPostImage = async (req, res) => {
   console.log(req);
@@ -9,7 +10,9 @@ const uploadPostImage = async (req, res) => {
   );
   await postImage.mv(imagePath);
 
-  res.send("upload file");
+  res
+    .status(StatusCodes.CREATED)
+    .send({ image: { src: `/upload/${postImage.name}` } });
 };
 
 module.exports = { uploadPostImage };

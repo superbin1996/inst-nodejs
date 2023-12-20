@@ -27,8 +27,12 @@ const UserSchema = new mongoose.Schema({
   },
   info: {
     type: String,
-    required: false,
+    default: "",
     maxLength: 300,
+  },
+  avatar: {
+    type: String,
+    default: ''
   }
 }, {timestamps:true});
 

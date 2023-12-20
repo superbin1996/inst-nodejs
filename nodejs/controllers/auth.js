@@ -12,7 +12,7 @@ const register = async (req, res) => {
 
 // For test only
 const getUsers = async (req, res) => {
-  const users = await User.find({})
+  const users = await User.find({}).sort('-updatedAt')
 
   res.status(StatusCodes.OK).json({ users });
 };

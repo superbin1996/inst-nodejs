@@ -1,8 +1,8 @@
 const express = require('express')
-const { follow } = require('../controllers/follow')
+const { toggleFollow, getAllFollows } = require('../controllers/follow')
 const router = express.Router()
 
-
-router.post('/:userId', follow)
+router.route('/:profileName').post(toggleFollow)
+router.route('/').get(getAllFollows)
 
 module.exports = router

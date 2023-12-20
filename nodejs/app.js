@@ -22,6 +22,7 @@ const followRouter = require('./routes/follow')
 const commentRouter = require('./routes/comments')
 const getLikeRouter = require('./routes/getLike')
 const likeRouter = require('./routes/likes')
+const profileRouter = require('./routes/profile')
 const errorHandlerMiddleware = require("./middleware/error-handler");
 
 // app.get("/", (req, res) => {
@@ -36,6 +37,7 @@ app.use('/api/v1/comments', authenticatedUser, commentRouter)
 app.use('/api/v1/posts', authenticatedUser, postRouter)
 app.use('/api/v1/getLike', allowAny, getLikeRouter)
 app.use('/api/v1/like', authenticatedUser, likeRouter)
+app.use('/api/v1/profile', allowAny, profileRouter)
 
 // error handler
 app.use(notFoundMiddleware)

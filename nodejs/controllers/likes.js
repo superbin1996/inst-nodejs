@@ -1,5 +1,6 @@
 const { StatusCodes } = require("http-status-codes");
 const Like = require("../models/Like");
+const CustomAPIError = require("../errors/custom-api");
 
 // AllowAny
 const getLike = async (req, res) => {
@@ -23,15 +24,17 @@ const getLike = async (req, res) => {
 };
 
 const like = async (req, res) => {
-  const { postId } = req.body.post;
+  const { post:postId } = req.body;
   const { userId } = req.user;
+  if (userId !== req.body.user){
+    throw new CustomAPIError('UNAUTHORIZED', StatusCodes.UNAUTHORIZED)
+  }
   const queryObject = { post: postId, user: userId };
   const result = await Like.findOne(queryObject);
-  req.body.user = userId;
 
   if (!result) {
     await Like.create(req.body);
-    let {isLike} = req.body
+    let isLike = req.body.isLike || false
     return res.status(StatusCodes.OK).json({isLike});
   }
 
@@ -43,7 +46,7 @@ const like = async (req, res) => {
 
 // For test
 const getAllLikes = async(req,res)=>{
-  const likes = await Like.find({})
+  const likes = await Like.find({}).sort('-updatedAt')
   
   res.status(StatusCodes.OK).json({likes})
 }
