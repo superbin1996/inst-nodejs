@@ -1,7 +1,7 @@
 # For production
 FROM node:alpine as builder
 
-WORKDIR /app
+WORKDIR /react
 
 COPY package.json .
 
