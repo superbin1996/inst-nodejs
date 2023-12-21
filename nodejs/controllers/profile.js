@@ -29,7 +29,7 @@ const getProfile = async (req, res) => {
 
   // Get this profile information
   const profile = await User.findOne({ username: profileName }).select(
-    "-_id username info"
+    "username info avatar"
   );
 
   let postQueryObject = { user: profileId };
@@ -38,21 +38,25 @@ const getProfile = async (req, res) => {
   const page = Number(req.query.page) || 1;
   const limit = Number(req.query.limit) || 10;
   const skip = (page - 1) * limit;
+
+  // Get Profile Posts
   const profilePosts = await Post.find(postQueryObject)
     .sort(sort)
     .skip(skip)
-    .limit(limit);
-  const totalPosts = await Post.countDocuments(postQueryObject);
+    .limit(limit).populate({path:'user',select:'username avatar'})
+  const totalPosts = await Post.countDocuments(postQueryObject)
   const numOfPages = Math.ceil(totalPosts / limit);
 
   res.status(StatusCodes.OK).json({
-    followers,
-    followings,
-    isFollow,
-    profile,
+    // keys follow in frontend
     profilePosts,
-    totalPosts,
-    numOfPages,
+    followers,
+    following:followings,
+    isFollow,
+    profileUser:profile,
+    profilePosts,
+    totalProfilePosts:totalPosts,
+    numOfProfilePages:numOfPages,
   });
 };
 

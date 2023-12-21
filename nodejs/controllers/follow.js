@@ -52,7 +52,7 @@ const toggleFollow = async (req, res) => {
   
   // Check if follow your own user
   if (username == profileName) {
-    console.log('follow your own');
+    // console.log('follow your own');
     throw new CustomAPIError("CANNOT FOLLOW YOUR OWN", StatusCodes.BAD_REQUEST);
   }
 

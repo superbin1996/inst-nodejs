@@ -11,7 +11,7 @@ const getAllPosts = async (req, res) => {
   const limit = Number(req.query.limit) || 10;
   const skip = (page - 1) * limit;
 
-  let result = await Post.find(queryObject).sort(sort).skip(skip).limit(limit);
+  let result = await Post.find(queryObject).sort(sort).skip(skip).limit(limit).populate({ path: "user", select: "avatar username" })
 
   const totalPosts = await Post.countDocuments(queryObject);
   const numOfPages = Math.ceil(totalPosts / limit);
@@ -21,14 +21,12 @@ const getAllPosts = async (req, res) => {
 
 const getPost = async (req, res) => {
   const {
-    user: { userId },
-    params: { id: postId },
+    params: { postId },
   } = req;
 
-  const post = await Post.findOne({
+  const post = await Post.findById({
     _id: postId,
-    user: userId,
-  });
+  }).populate({ path: "user", select: "username avatar" });
   if (!post) {
     throw new CustomAPIError(
       `No post with id ${postId}`,
@@ -45,7 +43,7 @@ const getFollowingPosts = async (req, res) => {
   const followingIds = user.following;
 
   let queryObject = {
-    user: { $in: ["6582593f93e5e8468d50fc0f", "65811408c7946f713b6efeaf"] },
+    user: { $in: followingIds },
   };
 
   const sort = req.query.sort || "-updatedAt";
@@ -58,7 +56,7 @@ const getFollowingPosts = async (req, res) => {
   const totalPosts = await Post.countDocuments(queryObject);
   const numOfPages = Math.ceil(totalPosts / limit);
 
-  res.status(StatusCodes.OK).json({ posts:result, totalPosts, numOfPages });
+  res.status(StatusCodes.OK).json({ posts: result, totalPosts, numOfPages });
 };
 
 const createPost = async (req, res) => {
@@ -70,7 +68,7 @@ const createPost = async (req, res) => {
 const updatePost = async (req, res) => {
   const {
     user: { userId },
-    params: { id: postId },
+    params: { postId },
   } = req;
 
   const post = await Post.findByIdAndUpdate(
@@ -90,7 +88,7 @@ const updatePost = async (req, res) => {
 const deletePost = async (req, res) => {
   const {
     user: { userId },
-    params: { id: postId },
+    params: { postId },
   } = req;
 
   const post = await Post.findOneAndDelete({
