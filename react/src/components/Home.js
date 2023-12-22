@@ -30,7 +30,7 @@ const Home = () => {
 
   const params = useParams()
   const observer = useRef()
-  const lastPostElementRef = useCallback(node => {
+  const lastPostElementRef = (node) => {
     if (observer.current) {
       observer.current.disconnect()
     }
@@ -44,7 +44,7 @@ const Home = () => {
     if (node) {
       observer.current.observe(node)
     }
-  })
+  }
 
   const hideHeaderDropdown = () => {
     if (showDropdown) {

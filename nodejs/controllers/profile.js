@@ -60,4 +60,20 @@ const getProfile = async (req, res) => {
   });
 };
 
-module.exports = { getProfile };
+const updateAvatar = async (req,res)=>{
+  const { profileName } = req.params;
+  const {username, userId} = req.user
+  if (username !== profileName) {
+    throw new CustomAPIError('UNAUTHORIZED', StatusCodes.UNAUTHORIZED)
+  }
+  
+  // console.log(req.body);
+  const user = await User.findByIdAndUpdate(
+    userId,
+    req.body,
+    { new: true, runValidators: true }
+  ).select('-_id username avatar')
+  res.status(StatusCodes.OK).json({user})
+}
+
+module.exports = { getProfile, updateAvatar };

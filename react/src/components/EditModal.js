@@ -33,13 +33,7 @@ const EditModal = () => {
   }
 
   function submitEdit() {
-    const formData = new FormData()
-    formData.append('status', eCaption)
-    // formData.append('image', uploadImage)
-    formData.append('postId', post._id)
-
-    editPost(formData)
-    console.log(formData);
+    editPost({status:eCaption, post:post._id})
     // setCaption(eCaption)
     toggleEditModal()
   }

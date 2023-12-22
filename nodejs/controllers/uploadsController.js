@@ -8,14 +8,14 @@ const uploadPostImage = async (req, res) => {
   if (!req.files) {
     throw new CustomAPIError("No file uploaded", StatusCodes.BAD_REQUEST);
   }
-  let postImage = req.files.image;
-
+  let postImage = req.files.image || req.files.avatar;
+  
   // Check headers data type
   if (!postImage.mimetype.startsWith('image')){
     throw new CustomAPIError('Please upload image', StatusCodes.BAD_REQUEST)
   }
 
-  const maxSize = 1024*1024
+  const maxSize = 2000000
 
   if(postImage.size > maxSize){
     throw new CustomAPIError('File size must be less than 4000kb', StatusCodes.BAD_REQUEST)
@@ -29,7 +29,7 @@ const uploadPostImage = async (req, res) => {
 
   res
     .status(StatusCodes.CREATED)
-    .send({ image: { src: `/uploads/${postImage.name}` } });
+    .send({ image: `/uploads/${postImage.name}`  });
 };
 
 module.exports = { uploadPostImage };

@@ -1,7 +1,7 @@
 #### Application preview
 [youtube](https://youtu.be/lt2pLhJaFck)
 
-- Inst Application is replica of `Instagram`. It might be block by chrome went running with https because of its name
+- Inst Application is replica of `Instagram`.
 - Application was built on `Nodejs` and `React`, `mongodb atlas`. Can run on `node` version `20.10.0` and `npm` version `10.2.3`. 
 - Currently still in development
 

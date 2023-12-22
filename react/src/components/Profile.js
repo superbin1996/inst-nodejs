@@ -40,7 +40,7 @@ export default function Profile() {
     observer.current = new IntersectionObserver(entries => {
       if (entries[0].isIntersecting && profilePage < numOfProfilePages) {
         loadMoreProfilePosts()
-        console.log('load more profile posts');
+        // console.log('load more profile posts');
       }
     })
 
@@ -54,14 +54,15 @@ export default function Profile() {
     // console.log('not user');
     if (user) {
       // console.log('user logged in');
-      if (String(profileUser._id) === String(user._id)) return true
+      if (profileUser.username === user.username) return true
       else return false
     }
   }
 
   const changeAvatar = (e) => {
-    e.preventDefault()
+    // e.preventDefault()
     const imageFile = e.target.files[0]
+    console.log(imageFile)
     const formData = new FormData()
     // formData.append('avatar', imageFile)
     if (imageFile) {

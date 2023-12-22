@@ -85,14 +85,13 @@ export default function UploadModal() {
   const uploadPost = async () => {
     const formData = new FormData()
     try {
-      formData.append('status', status)
-      // formData.append('iamge_url', '')
+      console.log(uploadImage);
       if (uploadImage) {
         formData.append('image', uploadImage)
-      }
+      } 
     }
     finally {
-      addPost(formData)
+      addPost(formData, {status:status})
     }
     
   }

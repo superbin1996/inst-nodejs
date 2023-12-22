@@ -29,9 +29,9 @@ const OptionModal = () => {
     // window.location.reload()
   }
 
-  function selfPostOption(userId) {
+  function selfPostOption(username) {
     // user._id is string, so change it to integer
-    if (String(userId) === String(user._id)) {
+    if (String(username) === String(user.username)) {
       return true
     }
     else {
@@ -47,7 +47,7 @@ const OptionModal = () => {
   return (
     <div className="modal" onClick={hideOptionModal}>
       <div className='option-content' onClick={e => e.stopPropagation()}>
-        {selfPostOption(post.user._id) ?
+        {selfPostOption(post.user.username) ?
           // Self post
           <div>
             <div className="option-content-item" style={{ color: 'red' }} onClick={postDelete}>
